@@ -14,8 +14,7 @@ class Homepage:
     def __init__(self, driver):
         self.driver = driver
 
-    def click_product(self):
-        sleep(20)
+    def click_category(self):
         rows = self.driver.find_elements(By.CSS_SELECTOR,"#our_products>.container>.rowSection")
         row = choice(rows)
         row.find_element(By.CSS_SELECTOR, "div>div>span").click()
@@ -30,4 +29,4 @@ if __name__ == '__main__':
     driver.implicitly_wait(10)
 
     homepage = Homepage(driver)
-    homepage.click_product()
+    homepage.click_category()
