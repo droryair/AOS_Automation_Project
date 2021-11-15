@@ -29,7 +29,7 @@ class CreateAccount:
         email_input.send_keys(email)
 
     def check_i_agree(self):
-        i_agree_checkbox = self.driver.find_element(By.NAME, "i_agree")
+        i_agree_checkbox = self.driver.find_element(By.CSS_SELECTOR, "#formCover>sec-view>div>label")
         i_agree_checkbox.click()
 
     def click_register(self):

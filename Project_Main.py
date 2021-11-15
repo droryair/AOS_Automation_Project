@@ -2,6 +2,10 @@ from time import sleep
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+## Delete
+from selenium.webdriver.common.by import By
+##
+
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -94,18 +98,28 @@ order_payment.click_registration()
 
 create_account = CreateAccount(driver)
 sleep(3)
-create_account.set_username('abc123')
+create_account.set_username('NewUser123')
 create_account.set_password('Pa55w.rd', True)
 create_account.set_email('something@try.abc')
+sleep(3)
 create_account.check_i_agree()
+sleep(0.5)
+create_account.click_register()
 
+order_payment.click_next()
 
-
+def delete_user():
+    topbar.click_my_account()
+    delete_account_btn = driver.find_element(By.CSS_SELECTOR,"#myAccountContainer>div>button")
+    delete_account_btn.click()
+    sleep(0.5)
+    yes_btn = driver.find_element(By.LINK_TEXT, "yes")
+    yes_btn.click()
 
 
 ##r  try
 
-
+delete_user()
 sleep(3)
 driver.close()
 

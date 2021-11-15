@@ -11,7 +11,11 @@ class OrderPayment:
         self.driver = driver
 
     def click_registration(self):
-        registration_btn = self.driver.find_element(By.ID,"registration_btnundefined")
+        registration_btn = self.driver.find_element(By.ID, "registration_btnundefined")
         registration_btn.click()
 
+## available only if a user is logged in:
 
+    def click_next(self):
+        next_btn = self.driver.find_element(By.ID, "next_btn")
+        next_btn.click()
