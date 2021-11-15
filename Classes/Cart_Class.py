@@ -98,4 +98,7 @@ class Cart:
             # prices.append(self.str_to_num(price_str))
         return prices
 
+    def click_checkout(self):
+        checkout_btn = self.driver.find_element(By.ID, "checkOutButton")
+        checkout_btn.click()
 
