@@ -1,1 +1,1 @@
-gitignore_try.py
+#try
