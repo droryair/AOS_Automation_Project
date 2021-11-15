@@ -38,12 +38,12 @@ class Cart:
                       (for example: 'quantities' column's index is 4)
         :return: a list including all of the cells' ELEMENTS from the column matching the index
         """
-        return map(lambda row: row.find_elements(By.TAG_NAME, 'td')[index], self.table_rows)
-        # lst = []
-        # for row in self.table_rows:
-        #     row_cells = row.find_elements(By.TAG_NAME, 'td')
-        #     lst.append(row_cells[index])
-        # return lst
+        # return map(lambda row: row.find_elements(By.TAG_NAME, 'td')[index], self.table_rows)
+        lst = []
+        for row in self.table_rows:
+            row_cells = row.find_elements(By.TAG_NAME, 'td')
+            lst.append(row_cells[index])
+        return lst
 
 ##  ===
 
