@@ -8,6 +8,6 @@ class Category:
         self.driver = driver
 
     def click_product(self):
-        products = self.driver.find_elements(By.CSS_SELECTOR,"div.categoryRight>ul")
+        products = self.driver.find_elements(By.CSS_SELECTOR,"div.categoryRight>ul>li")
         choice(products).click()
 
