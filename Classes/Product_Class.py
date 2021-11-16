@@ -26,6 +26,9 @@ class Product:
                 minus_btn.click()
                 existing_quant = int(self.driver.find_element(By.CSS_SELECTOR, "input[name=quantity]").get_attribute("value"))
 
+    def get_quantity(self):
+        existing_quant = self.driver.find_element(By.CSS_SELECTOR, "input[name=quantity]").get_attribute("value")
+        return existing_quant
     '''    
     def choose_random_color(self):
         ##   #productProperties>div[class='colors ng-scope']>div:nth-child(3)>span

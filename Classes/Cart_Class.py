@@ -102,3 +102,7 @@ class Cart:
         checkout_btn = self.driver.find_element(By.ID, "checkOutButton")
         checkout_btn.click()
 
+    def is_cart_empty(self):
+        return self.driver.find_element(By.CSS_SELECTOR, "#shoppingCart>div>label[translate='Your_shopping_cart_is_empty']").is_displayed()
+
+
