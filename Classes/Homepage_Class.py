@@ -17,7 +17,8 @@ class Homepage:
     def click_category(self):
         rows = self.driver.find_elements(By.CSS_SELECTOR,"#our_products>.container>.rowSection")
         row = choice(rows)
-        row.find_element(By.CSS_SELECTOR, "div>div>span").click()
+        categories = row.find_elements(By.CSS_SELECTOR, "div>div>span")
+        choice(categories).click()
 
 
 
