@@ -13,6 +13,7 @@ from Classes.Cart_Class import Cart
 from Classes.Category_Class import Category
 from Classes.CreateAccount_Class import CreateAccount
 from Classes.Homepage_Class import Homepage
+from Classes.MyOrders_Class import MyOrders
 from Classes.OrderPayment_Class import OrderPayment
 from Classes.Product_Class import Product
 from Classes.TopBar_Class import Topbar
@@ -45,11 +46,11 @@ def str_to_num(stri: str):
 
 
 homepage = Homepage(driver)
-sleep(10)
+sleep(3)
 homepage.click_category()
 
 category = Category(driver)
-sleep(10)
+sleep(3)
 category.click_product()
 
 product = Product(driver)
@@ -68,16 +69,16 @@ product.change_quantity(3)
 product.add_to_cart()
 topbar.click_cart()
 
-sleep(10)
+sleep(5)
 cart = Cart(driver)
 quantities_str = cart.get_products_quantities()
 names = cart.get_products_names()
 colors = cart.get_products_colors()
 prices_str = cart.get_products_price()
-print("quantities: ", quantities_str)
-print("names: ", names)
-print("colors: ", colors)
-print("prices_str: ", prices_str)
+# print("quantities: ", quantities_str)
+# print("names: ", names)
+# print("colors: ", colors)
+# print("prices_str: ", prices_str)
 
 
 def price_str_to_num():
@@ -98,29 +99,55 @@ order_payment.click_registration()
 
 create_account = CreateAccount(driver)
 sleep(3)
-create_account.set_username('NewUser123')
+create_account.set_username('NewUser1234')
 create_account.set_password('Pa55w.rd', True)
 create_account.set_email('something@try.abc')
 sleep(3)
 create_account.check_i_agree()
 sleep(0.5)
 create_account.click_register()
+sleep(5)
+try:
+    order_payment.click_next()
+except:
+    print("user already exists")
 
-order_payment.click_next()
+sleep(3)
+order_payment.set_safepay_username('SafeUser123')
+order_payment.set_safepay_password('SafePay1234')
+order_payment.click_pay_now()
+sleep(1)
+
+order_number = order_payment.get_order_number()
+print("first order number: ", order_number)
+
+topbar.click_cart()
+sleep(3)
+print(cart.is_cart_empty())
+
+topbar.click_my_orders()
+# topbar.click_menu_item(1)
+my_orders = MyOrders(driver)
+orders_numbers = my_orders.get_orders_numbers()
+print("all orders numbers", orders_numbers)
+
+if order_number in orders_numbers:
+    print(f"The order {order_number} was added to the 'My Orders' page. (existing orders:{orders_numbers})")
+else:
+    print(f"The order: {order_number} was !!!NOT!!! added to the 'My Orders' page. (existing orders:{orders_numbers})")
 
 def delete_user():
     topbar.click_my_account()
-    delete_account_btn = driver.find_element(By.CSS_SELECTOR,"#myAccountContainer>div>button")
+    delete_account_btn = driver.find_element(By.CSS_SELECTOR, "#myAccountContainer>div>button")
     delete_account_btn.click()
     sleep(0.5)
-    yes_btn = driver.find_element(By.LINK_TEXT, "yes")
-    yes_btn.click()
+
 
 
 ##r  try
 
-delete_user()
 sleep(3)
+delete_user()
 driver.close()
 
 
