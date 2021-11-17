@@ -47,7 +47,7 @@ def str_to_num(stri: str):
 
 homepage = Homepage(driver)
 sleep(3)
-homepage.click_category()
+homepage.click_random_category()
 
 category = Category(driver)
 sleep(3)
@@ -61,7 +61,7 @@ product.add_to_cart()
 topbar = Topbar(driver)
 topbar.click_aos_logo()
 
-homepage.click_category()
+homepage.click_random_category()
 sleep(1)
 category.click_product()
 sleep(1)
@@ -134,7 +134,15 @@ print("all orders numbers", orders_numbers)
 if order_number in orders_numbers:
     print(f"The order {order_number} was added to the 'My Orders' page. (existing orders:{orders_numbers})")
 else:
-    print(f"The order: {order_number} was !!!NOT!!! added to the 'My Orders' page. (existing orders:{orders_numbers})")
+    print(f"The order: {order_number} was NOT added to the 'My Orders' page. (existing orders:{orders_numbers})")
+
+str_total_orders_costs = my_orders.get_total_orders_costs()
+total_orders_costs=[]
+for string in str_total_orders_costs:
+    total_orders_costs.append(str_to_num(string))
+
+print("total_orders_costs: ", total_orders_costs)
+
 
 def delete_user():
     topbar.click_my_account()
@@ -148,6 +156,6 @@ def delete_user():
 
 sleep(3)
 delete_user()
-driver.close()
+
 
 
