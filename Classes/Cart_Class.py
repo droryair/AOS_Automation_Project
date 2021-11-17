@@ -12,6 +12,7 @@ from selenium.webdriver.support.wait import WebDriverWait
     2. get_products_quantities- returns a list of all of the products' quantities in the cart, as a string.
     3. get_products_colors- returns a list of all of the products' colors in the cart.
     4. get_products_price- returns a list of all of the products' prices in the cart, as a string.
+    5. get_total !!!
     
 ## CLICK METHODS:
     1. click_checkout- clicks the 'Checkout' button.
@@ -68,7 +69,7 @@ class Cart:
         names = []
         for name_elem in names_elems:
             names.append(name_elem.text)
-        return names
+        return names.reverse()
 
     # returns a list of all of the products' quantities in the cart, as a string
     def get_products_quantities(self):
@@ -81,6 +82,7 @@ class Cart:
         for quant_elem in quantities_elems:
             quantities.append(quant_elem.text)
             # quantities.append(self.str_to_num(quant_elem.text))
+        quantities.reverse()
         return quantities
 
     # returns a list of all of the products' colors in the cart
@@ -93,6 +95,7 @@ class Cart:
         colors = []
         for color_td in colors_tds:
             colors.append(color_td.find_element(By.TAG_NAME, "span").get_attribute("title"))
+        colors.reverse()
         return colors
 
     # returns a list of all of the products' prices in the cart, as a string.
@@ -107,7 +110,12 @@ class Cart:
             price_str = price_td.find_element(By.TAG_NAME, 'p').text
             prices.append(price_str)
             # prices.append(self.str_to_num(price_str))
+        prices.reverse()
         return prices
+
+    def get_total(self):
+        total_str = self.driver.find_element(By.XPATH,"//tfoot/tr[1]/td[2]/span[2]").text
+        return total_str
 
     ## CLICK METHODS ##
 
@@ -144,6 +152,8 @@ class Cart:
         :functionality: checks if the cart is empty or not.
         :return: True if empty, False if not empty.
         """
+        self.refresh_table()
         return self.driver.find_element(By.CSS_SELECTOR, "#shoppingCart>div>label[translate='Your_shopping_cart_is_empty']").is_displayed()
 
 
+# tr one before last > td last >span[2]

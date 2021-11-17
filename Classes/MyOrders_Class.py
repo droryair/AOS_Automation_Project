@@ -31,10 +31,11 @@ class MyOrders:
         """
         :return: a list containing all of the user's orders numbers, as strings.
         """
+        self.refresh_table()
         order_numbers_elements = []
         for row in self.table_rows:
             tds = row.find_elements(By.TAG_NAME, 'td')  # columns
-            td = tds[1]  # 'order number' column
+            td = tds[0]  # 'order number' column
             order_numbers_elements.append(td.find_element(By.TAG_NAME, 'label'))
         print("len(order_numbers_elements)", len(order_numbers_elements))
         orders_numbers = []
@@ -50,7 +51,6 @@ class MyOrders:
         :return: returns a list of all of the user's orders' total price, as a string.
         """
         self.refresh_table()
-
         total_orders = []
         for row in self.table_rows:
             tds = row.find_elements(By.TAG_NAME, "td")  # columns

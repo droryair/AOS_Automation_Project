@@ -15,6 +15,6 @@ class Category:
         :functionality: clicks a random product in the page
         :return: None
         """
-        products = self.driver.find_elements(By.CSS_SELECTOR,"div.categoryRight>ul>li")
+        products = self.driver.find_elements(By.CSS_SELECTOR, "div.categoryRight>ul>li")
         choice(products).click()
 
