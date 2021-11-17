@@ -51,7 +51,7 @@ homepage.click_random_category()
 
 category = Category(driver)
 sleep(3)
-category.click_product()
+category.click_random_product()
 
 product = Product(driver)
 sleep(1)
@@ -63,7 +63,7 @@ topbar.click_aos_logo()
 
 homepage.click_random_category()
 sleep(1)
-category.click_product()
+category.click_random_product()
 sleep(1)
 product.change_quantity(3)
 product.add_to_cart()
