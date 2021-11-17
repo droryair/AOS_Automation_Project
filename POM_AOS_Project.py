@@ -2,7 +2,7 @@
 מה מבנה הטסטים? האם לכל סעיף צריך להיות טסט משלו?
 איך מונעים בעיית סנכון באופן גורף (למשל, אם בדיוק עברתי עמוד)? האם צריך להתחשב בבעיות סנכרון עבור כל פונקציה?
 """
-
+from random import randint
 from unittest import TestCase
 from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
@@ -23,6 +23,8 @@ class test_AOS_website(TestCase):
         self.service = Service(r'D:\QA_Course\webdrivers\chromedriver.exe')
         self.driver = webdriver.Chrome(service= self.service)
         self.driver.get("https://www.advantageonlineshopping.com/#/")
+        self.driver.implicitly_wait(10)
+        self.driver.maximize_window()
 
         self.topbar = Topbar()
         self.homepage = Homepage()
@@ -40,7 +42,7 @@ class test_AOS_website(TestCase):
         לאחר בחירה של לפחות שני מוצרים, בכמויות שונות (לדוגמה 2 יחידות של מוצר ראשון ו-3 יחידות של מוצר שני),
         יש לבדוק שכמות המוצרים הסופית מופיעה נכון ומדוייק בחלונית עגלת הקניות מצד ימין למעלה של המסך.
         """
-
+        quant1 = randint(1, 10)
 
     def test_2(self):
         self.topbar.click_aos_logo()

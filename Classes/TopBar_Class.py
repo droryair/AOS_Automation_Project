@@ -107,6 +107,9 @@ class Topbar:
     def click_cart(self):
         cart = self.driver.find_element(By.ID, "menuCart")
         cart.click()
+        ActionChains(self.driver).move_to_element(self.user_btn).perform()
+        self.user_btn.send_keys(Keys.ESCAPE)
+        self.wait10.until(EC.invisibility_of_element(((self.driver.find_element(By.CSS_SELECTOR, '#toolTipCart>div>table')))))
 
     def get_total_items(self):
         return self.driver.find_element(By.CSS_SELECTOR, "#shoppingCartLink>span").text
@@ -135,3 +138,12 @@ class Topbar:
         remove_btn = rows[item_index].find_element(By.CSS_SELECTOR, ".closeDiv>div")
         remove_btn.click()
 
+    ## function referring to location in the site:
+
+    def get_page(self):
+        # div>nav
+        path = self.driver.find_elements(By.CSS_SELECTOR, "div>nav>a")
+        if len(path) == 0:
+            return "Home Page"
+        else:
+            return path[len(path)-1].text

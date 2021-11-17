@@ -2,13 +2,15 @@
 cart (quantity, name, color, price, remove, "shopping cart" text, Total)
 """
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class Cart:
     def __init__(self, driver):
         self.driver = driver
-        self.table_rows = self.driver.find_elements(By.CSS_SELECTOR,"div[id=shoppingCart]>table>tbody>tr")
-
+        self.table_rows = self.driver.find_elements(By.CSS_SELECTOR, "div[id=shoppingCart]>table>tbody>tr")
+        self.wait10 = WebDriverWait(self.driver, 10)
 ## == inner-class functions == ##
 
     # this function will receive a string and turn it into a number (int/float)
@@ -39,12 +41,16 @@ class Cart:
         :return: a list including all of the cells' ELEMENTS from the column matching the index
         """
         # return map(lambda row: row.find_elements(By.TAG_NAME, 'td')[index], self.table_rows)
+        self.refresh_table()
         lst = []
         for row in self.table_rows:
             row_cells = row.find_elements(By.TAG_NAME, 'td')
             lst.append(row_cells[index])
         return lst
 
+    ## refresh self.table_rows
+    def refresh_table(self):
+        self.table_rows = self.driver.find_elements(By.CSS_SELECTOR, "div[id=shoppingCart]>table>tbody>tr")
 ##  ===
 
     # returns a list of all of the products' names in the cart
@@ -101,6 +107,15 @@ class Cart:
     def click_checkout(self):
         checkout_btn = self.driver.find_element(By.ID, "checkOutButton")
         checkout_btn.click()
+
+    def click_edit(self, index):
+        # last td >Text: EDIT
+        self.refresh_table()
+        tds = self.table_rows[index].find_elements(By.TAG_NAME, "td")
+        span = tds[len(tds)-1].find_element(By.TAG_NAME, "span")
+        edit_btn = span.find_element(By.LINK_TEXT, "EDIT")
+        self.wait10.until(EC.element_to_be_clickable((edit_btn)))
+        edit_btn.click()
 
     def is_cart_empty(self):
         return self.driver.find_element(By.CSS_SELECTOR, "#shoppingCart>div>label[translate='Your_shopping_cart_is_empty']").is_displayed()
