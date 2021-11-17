@@ -49,6 +49,13 @@ class Topbar:
             return True
         return False
 
+    def get_username(self):
+        if self.is_logged_in():
+            username = self.driver.find_element(By.CSS_SELECTOR, '#menuUserLink>span').text
+            return username
+        print("no user is logged in")
+        return
+
     def show_cart_popup(self):
         cart_icon = self.driver.find_element(By.ID, "menuCart")
         ActionChains(self.driver).move_to_element(cart_icon).perform()
@@ -56,7 +63,6 @@ class Topbar:
 
     # def is_cart_empty(self):
     #     self.get_total_items()
-
 
     ##
 
@@ -91,17 +97,22 @@ class Topbar:
             message = self.driver.find_element(By.ID, "signInResultMessage").text
             if not self.is_logged_in() and message == 'Incorrect user name or password.':
                 print("Incorrect username or password. Please try again.")
+            else:
+                self.wait3.until(EC.visibility_of((self.driver.find_element(By.CSS_SELECTOR, '#menuUserLink>span'))))
         else:
             print("A user is already signed in")
 
     def click_sign_out(self):
         # sign_out = self.driver.find_element(By.LINK_TEXT, "Sign out")
         # self.wait_click_item_btn(sign_out)
+        username_elem = self.driver.find_element(By.CSS_SELECTOR, '#menuUserLink>span')
         self.wait_click_item_btn(self.driver.find_element(By.CSS_SELECTOR, "label[translate='Sign_out'][role='link']"))
+        self.wait3.until(EC.invisibility_of_element((username_elem)))
         # sign_out.click()
 
     def click_aos_logo(self):
         aos_logo = self.driver.find_element(By.CSS_SELECTOR, "a[href='#/']")
+        self.wait10.until(EC.element_to_be_clickable(aos_logo))
         aos_logo.click()
 
     def click_cart(self):
@@ -112,38 +123,67 @@ class Topbar:
         self.wait10.until(EC.invisibility_of_element(((self.driver.find_element(By.CSS_SELECTOR, '#toolTipCart>div>table')))))
 
     def get_total_items(self):
-        return self.driver.find_element(By.CSS_SELECTOR, "#shoppingCartLink>span").text
+        # !!!
+        # sleep(3)
+        amount_str = self.driver.find_element(By.CSS_SELECTOR, "#shoppingCartLink>span").text
+        if amount_str == '':
+            return 0
+        return int(amount_str)
+
+    ## POP-UP CART METHODS ##
 
     def get_items_from_popup_cart(self):
-        if self.get_total_items() != '':
+        if self.get_total_items() != 0:
             # toolTipCart>div>table>tbody>tr
+            # [{name:'' ,quant:'', color:''}, {name:'' ,quant:'', color:''}...]
             self.show_cart_popup()
-            items_names = []
+            items = []
             rows = self.driver.find_elements(By.CSS_SELECTOR, "#toolTipCart>div>table>tbody>tr")
             for row in rows:
-                details = row.find_elements(By.CSS_SELECTOR, "td:nth-child(2)>a")
-                items_names.append(details[0].text)
-            for i in range(len(items_names)):
-                name = items_names.pop().split("QTY:")[0].rstrip("\n")
-                items_names.append(name)
-            return items_names
+                cart_items = row.find_elements(By.XPATH, ".//td[2]/a")  # parent: h3(name), label(quant), label>span(color)
+                for cart_item in cart_items:
+                    name = cart_item.find_element(By.TAG_NAME, 'h3').text
+                    quant = cart_item.find_element(By.XPATH, './/label[1]').text
+                    color = cart_item.find_element(By.XPATH, './/label[2]/span').text
+                    items.append({'name': name, 'quantity': quant, 'color': color})
+            items.reverse()
+            return items
         else:
             print("The cart is empty")
             return []
 
+    def get_items_elems_from_popup_cart(self):
+        if self.get_total_items() != 0:
+            self.show_cart_popup()
+            items_elems = self.driver.find_elements(By.CSS_SELECTOR, "#toolTipCart>div>table>tbody>tr")
+            items_elems.reverse()
+            return items_elems
+        else:
+            print("The cart is empty")
+            return []
+
+
     def remove_item_from_popup_cart(self, item_index):
         # .closeDiv
         self.show_cart_popup()
+        items_before = self.get_items_elems_from_popup_cart()
         rows = self.driver.find_elements(By.CSS_SELECTOR, "#toolTipCart>div>table>tbody>tr")
         remove_btn = rows[item_index].find_element(By.CSS_SELECTOR, ".closeDiv>div")
         remove_btn.click()
+        items_after = self.get_items_elems_from_popup_cart()
+        removed_item = [item for item in items_before if item not in items_after]
+        return removed_item
 
-    ## function referring to location in the site:
+
+    ## function referring to location in the site ##
 
     def get_page(self):
         # div>nav
-        path = self.driver.find_elements(By.CSS_SELECTOR, "div>nav>a")
+        path = self.driver.find_elements(By.CSS_SELECTOR, "nav>a")
         if len(path) == 0:
-            return "Home Page"
+            return "Home"
         else:
             return path[len(path)-1].text
+
+    def go_back(self):
+        self.driver.back()
