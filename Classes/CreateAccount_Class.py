@@ -50,4 +50,3 @@ class CreateAccount:
     def click_register(self):
         register_btn = self.driver.find_element(By.ID, "register_btnundefined")
         self.wait_for_register_btn(register_btn)
-        # register_btn.click()

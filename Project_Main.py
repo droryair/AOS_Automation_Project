@@ -134,7 +134,7 @@ print("all orders numbers", orders_numbers)
 if order_number in orders_numbers:
     print(f"The order {order_number} was added to the 'My Orders' page. (existing orders:{orders_numbers})")
 else:
-    print(f"The order: {order_number} was !!!NOT!!! added to the 'My Orders' page. (existing orders:{orders_numbers})")
+    print(f"The order: {order_number} was NOT added to the 'My Orders' page. (existing orders:{orders_numbers})")
 
 def delete_user():
     topbar.click_my_account()

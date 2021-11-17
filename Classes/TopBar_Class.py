@@ -33,18 +33,17 @@ class Topbar:
     def wait_click_item_btn(self, item_btn):
         # self.wait10.until(EC.element_to_be_clickable(self.user_btn))
         if self.is_logged_in():
+            # self.wait3.until(EC.element_to_be_clickable(((self.user_btn))))
             self.user_btn.click()
-            self.user_btn.send_keys(Keys.ESCAPE)
-            print("clicked ESCAPE")
-            # self.wait10.until(EC.element_to_be_clickable(item_btn))
-            ## !!! this IS a sync problem. the wait doesn't work. the sleep does.
-            sleep(3)
+            self.user_btn.send_keys(Keys.ESCAPE)  # in case the cart popup is visible
+            self.wait10.until(EC.element_to_be_clickable((item_btn)))
             item_btn.click()
         else:
             print("No user is logged in. Please log in first.")
 
     def is_logged_in(self):
         # #menuUserLink>span
+        self.wait3.until(EC.element_to_be_clickable(self.user_btn))
         username = self.driver.find_element(By.CSS_SELECTOR, '#menuUserLink>span').text
         if len(username) > 0:
             return True
