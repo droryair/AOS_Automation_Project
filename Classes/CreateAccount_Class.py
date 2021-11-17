@@ -1,9 +1,9 @@
-"""'
-create account (username, email password, confirm password, i agree checkbox, register btn)
-"""
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+"""'
+create account (username, email password, confirm password, i agree checkbox, register btn)
+"""
 
 
 class CreateAccount:

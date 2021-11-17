@@ -19,6 +19,7 @@ from selenium.webdriver.support.wait import WebDriverWait
     
 ## BOOLEAN METHODS:
     1. is_cart_empty- returns boolean value for the emptiness of the cart.
+    
 """
 
 
