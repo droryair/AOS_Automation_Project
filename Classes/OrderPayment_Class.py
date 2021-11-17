@@ -25,7 +25,7 @@ class OrderPayment:
             print("Can't click the 'pay now' button")
 
     # in case a creditcard details are already registered and we want deit them
-    def edit_paymet_details(self):
+    def click_edit_paymet_details(self):
         edit_btn = self.driver.find_element(By.CSS_SELECTOR, "label[translate=Edit]")
         # edit_btn = self.driver.find_element(By.LINK_TEXT, "Edit")
         edit_btn.click()
@@ -34,7 +34,7 @@ class OrderPayment:
         try:
             self.wait3.until(EC.visibility_of(element))
         except:
-            self.edit_paymet_details()
+            self.click_edit_paymet_details()
 
 
 
@@ -92,32 +92,31 @@ class OrderPayment:
         self.try_editing(card_number)
         card_number_input.clear()
         card_number_input.send_keys(card_number)
-        # self.wait3.until(EC.text_to_be_present_in_element_attribute((card_number_input), 'value', card_number))
-        try:
-            self.wait3.until(EC.text_to_be_present_in_element_value((By.NAME, "card_number"), card_number))
-        except:
-            pass
+        card_number_input.send_keys(card_number)
+        # try:
+        #     self.wait3.until(EC.text_to_be_present_in_element_value((By.NAME, "card_number"), card_number))
+        # except:
+        #     pass
 
     def set_mastercard_cvv_number(self, cvv_number):
         cvv_number_input = self.driver.find_element(By.NAME, "cvv_number")
         self.try_editing(cvv_number_input)
         cvv_number_input.clear()
-        # cvv_number_input.send_keys(0)
         cvv_number_input.send_keys(cvv_number)
-        try:
-            self.wait3.until(EC.text_to_be_present_in_element_value((By.NAME, "cvv_number"), cvv_number))
-        except:
-            pass
+        # try:
+        #     self.wait3.until(EC.text_to_be_present_in_element_value((By.NAME, "cvv_number"), cvv_number))
+        # except:
+        #     pass
 
     def set_mastercard_cardholder_name(self, cardholder_name):
         cardholder_name_input = self.driver.find_element(By.NAME, "cardholder_name")
         self.try_editing(cardholder_name_input)
         cardholder_name_input.clear()
         cardholder_name_input.send_keys(cardholder_name)
-        try:
-            self.wait3.until(EC.text_to_be_present_in_element_value((By.NAME, "cardholder_name"), cardholder_name))
-        except:
-            pass
+        # try:
+        #     self.wait3.until(EC.text_to_be_present_in_element_value((By.NAME, "cardholder_name"), cardholder_name))
+        # except:
+        #     pass
 
     def click_pay_now_mastercard(self):
         # pay_now_btn_MasterCredit

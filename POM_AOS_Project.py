@@ -22,7 +22,7 @@ class test_AOS_website(TestCase):
 
     def setUp(self):
         self.service = Service(r'D:\QA_Course\webdrivers\chromedriver.exe')
-        self.driver = webdriver.Chrome(service= self.service)
+        self.driver = webdriver.Chrome(service=self.service)
         self.driver.get("https://www.advantageonlineshopping.com/#/")
         self.driver.implicitly_wait(10)
         self.driver.maximize_window()
@@ -35,6 +35,8 @@ class test_AOS_website(TestCase):
         self.order_payment = OrderPayment(self.driver)
         self.create_account = CreateAccount(self.driver)
         self.my_orders = MyOrders(self.driver)
+        if self.topbar.is_logged_in():
+            self.topbar.click_sign_out()
 
     ## IN-CLASS METHODS
 
@@ -89,7 +91,10 @@ class test_AOS_website(TestCase):
         if is_float:
             return float(stri)
         return int(stri)
+
     ##
+
+    # 1,2,5,8,9
 
     ## TESTS FUNCTIONS
     def test_1(self):
@@ -100,8 +105,8 @@ class test_AOS_website(TestCase):
         """
         quant1 = randint(1, 10)
         quant2 = randint(1, 10)
-        self.add_random_product(quant1)
-        self.add_random_product(quant2)
+        self.add_random_products(1, quant1)
+        self.add_random_products(1, quant2)
         total_items = self.topbar.get_total_items()
         self.assertEqual(int(total_items), quant1 + quant2)
 
@@ -120,6 +125,15 @@ class test_AOS_website(TestCase):
             item['quantity'] = self.str_to_num(item['quantity'])
         print("initial details: ", initial_details)
         print("cart_details: ", cart_details)
+        # taking care of case where the same product was added more than once:
+        for i in range(len(initial_details)-1):
+            if initial_details[i]['name'] in initial_details[i:]:
+                name = initial_details[i]['name']
+                for j in range(i, len(initial_details)-1):
+                    if initial_details[j]['name'] == name:
+                        new_quant = initial_details[i]['quantity'] + initial_details[j]['quantity']
+                        initial_details[i]['quantity'] = new_quant
+                        initial_details.pop(j)
         for i in range(len(initial_details)):
             # the name in the cart pop-up is only partial.
             self.assertIn(cart_details[i]['name'].rstrip('.'), initial_details[i]['name'])
@@ -174,12 +188,15 @@ class test_AOS_website(TestCase):
         שם המוצר, כמות המוצר, מחיר המוצר
         """
         # adding 3 random products to the cart
-        added_products = self.add_random_products(3, randint(4, 15))
+        random_quant = randint(4, 9)
+        added_products = self.add_random_products(3, random_quant)  # randint(4, 15)
         total_price = 0
         for product in added_products:
             total_price += product['price'] * product['quantity']
+            print("total_price: ", total_price)
         self.topbar.click_cart()
         cart_total = self.str_to_num(self.cart.get_total())
+        print("cart_total: ", cart_total)
         self.assertEqual(total_price, cart_total)
 
 
@@ -244,7 +261,7 @@ class test_AOS_website(TestCase):
         self.cart.click_checkout()
         self.order_payment.click_registration()
         # creating a new account
-        self.create_account.set_username('NewUser1234')
+        self.create_account.set_username('NewUser12345')
         self.create_account.set_password('Pa55w.rd', True)
         self.create_account.set_email('something@try.abc')
         self.create_account.check_i_agree()
@@ -276,6 +293,8 @@ class test_AOS_website(TestCase):
         if order_number not in orders_numbers:
             self.fail(f"The order {order_number} is not in 'My Orders' page.")
 
+        self.topbar.delete_logged_user()
+
     def test_9(self):
         self.topbar.click_aos_logo()
         """
@@ -304,7 +323,7 @@ class test_AOS_website(TestCase):
         # generating random mastercard details and setting them
             # card number:
         card_number = ''
-        for i in range(16):
+        for i in range(14):
             card_number += str(randint(0, 10))
 
             # CVV number

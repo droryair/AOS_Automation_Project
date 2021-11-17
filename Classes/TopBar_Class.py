@@ -110,6 +110,14 @@ class Topbar:
         self.wait3.until(EC.invisibility_of_element((username_elem)))
         # sign_out.click()
 
+    def delete_logged_user(self):
+        self.click_my_account()
+        delete_account_btn = self.driver.find_element(By.CSS_SELECTOR, "#myAccountContainer>div>button")
+        delete_account_btn.click()
+        self.wait3.until(EC.visibility_of((self.driver.find_element(By.CSS_SELECTOR, "div[id='deleteAccountPopup']>div[class='deleteBtnContainer']>div[class='deletePopupBtn deleteRed']"))))
+        self.driver.find_element(By.CSS_SELECTOR, "div[id='deleteAccountPopup']>div[class='deleteBtnContainer']>div[class='deletePopupBtn deleteRed']").click()
+
+
     def click_aos_logo(self):
         aos_logo = self.driver.find_element(By.CSS_SELECTOR, "a[href='#/']")
         self.wait10.until(EC.element_to_be_clickable(aos_logo))
