@@ -1,24 +1,41 @@
-
-
 from selenium.webdriver.common.by import By
- #  div[id=myAccountContainer]>div>table>tbody>tr>td:nth-child(1)>label
+"""
+## IN-CLASS METHODS:
+    1.refresh_table- refresh orders table in case something changed.
+## GET METHODS:
+    1. get_orders_numbers- returns a list containing all of the user's orders numbers, as strings.
+    2. get_total_orders_costs- returns a list of all of the user's orders' total price, as a string.
+"""
 
 class MyOrders:
     def __init__(self, driver):
         self.driver = driver
         self.table_rows = self.driver.find_elements(By.XPATH,"//div[@id='myAccountContainer']/div/table/tbody/tr[@class='ng-scope']")
 
-    ## in-class methods:
+    ## IN-CLASS METHODS
 
-    #refresh orders table
+    # refresh orders table in case something changed
     def refresh_table(self):
-        self.table_rows = self.driver.find_elements(By.XPATH,"//div[@id='myAccountContainer']/div/table/tbody/tr[@class='ng-scope']")
+        """
+        :functionality: refresh orders table in case something changed.
+        :return: None
+        """
+        self.table_rows = self.driver.find_elements(By.XPATH, "//div[@id='myAccountContainer']/div/table/tbody/tr[@class='ng-scope']")
 
-    ##
+    ## ===
 
+    ## GET METHODS
 
+    # returns a list containing all of the user's orders numbers, as strings.
     def get_orders_numbers(self):
-        order_numbers_elements = self.driver.find_elements(By.XPATH, "//div[@id='myAccountContainer']/div/table/tbody/tr/td[1]/label")
+        """
+        :return: a list containing all of the user's orders numbers, as strings.
+        """
+        order_numbers_elements = []
+        for row in self.table_rows:
+            tds = row.find_elements(By.TAG_NAME, 'td')  # columns
+            td = tds[1]  # 'order number' column
+            order_numbers_elements.append(td.find_element(By.TAG_NAME, 'label'))
         print("len(order_numbers_elements)", len(order_numbers_elements))
         orders_numbers = []
         for element in order_numbers_elements:
@@ -27,14 +44,16 @@ class MyOrders:
         print(orders_numbers[0])
         return orders_numbers
 
+    # returns a list of all of the user's orders' total price, as a string.
     def get_total_orders_costs(self):
-        # tr[class ="ng-scope"]>td[last]>label.text
+        """
+        :return: returns a list of all of the user's orders' total price, as a string.
+        """
         self.refresh_table()
 
         total_orders = []
         for row in self.table_rows:
-            tds = row.find_elements(By.TAG_NAME, "td")
-            td = tds[len(tds)-1].find_element(By.TAG_NAME, "label")
+            tds = row.find_elements(By.TAG_NAME, "td")  # columns
+            td = tds[len(tds)-1].find_element(By.TAG_NAME, "label")  # 'total price' column
             total_orders.append(td.text)
-        print("MyOrders->28->total_orders: ", total_orders)
         return total_orders

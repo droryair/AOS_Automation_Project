@@ -51,7 +51,7 @@ homepage.click_random_category()
 
 category = Category(driver)
 sleep(3)
-category.click_product()
+category.click_random_product()
 
 product = Product(driver)
 sleep(1)

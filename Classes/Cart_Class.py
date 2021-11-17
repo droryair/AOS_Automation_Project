@@ -9,9 +9,9 @@ from selenium.webdriver.support.wait import WebDriverWait
     
 ## GET METHODS:
     1. get_products_names- returns a list of all of the products' names in the cart.
-    2. get_products_quantities- returns a list of all of the products' quantities in the cart.
+    2. get_products_quantities- returns a list of all of the products' quantities in the cart, as a string.
     3. get_products_colors- returns a list of all of the products' colors in the cart.
-    4. get_products_price- returns a list of all of the products' prices in the cart.
+    4. get_products_price- returns a list of all of the products' prices in the cart, as a string.
     
 ## CLICK METHODS:
     1. click_checkout- clicks the 'Checkout' button.
@@ -70,10 +70,10 @@ class Cart:
             names.append(name_elem.text)
         return names
 
-    # returns a list of all of the products' quantities in the cart
+    # returns a list of all of the products' quantities in the cart, as a string
     def get_products_quantities(self):
         """
-        :return: a list of all of the products' quantities in the cart
+        :return: a list of all of the products' quantities in the cart, as a string.
                 (index 0 = top product's quantity)
         """
         quantities_elems = self.get_list_cells_elems(4)
@@ -95,10 +95,10 @@ class Cart:
             colors.append(color_td.find_element(By.TAG_NAME, "span").get_attribute("title"))
         return colors
 
-    # returns a list of all of the products' prices in the cart
+    # returns a list of all of the products' prices in the cart, as a string.
     def get_products_price(self):
         """
-        :return: a list of all of the products' prices in the cart
+        :return: a list of all of the products' prices in the cart, as a string.
                 (index 0 = top product's price)
         """
         prices_tds = self.get_list_cells_elems(5)
