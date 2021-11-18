@@ -37,12 +37,9 @@ class MyOrders:
             tds = row.find_elements(By.TAG_NAME, 'td')  # columns
             td = tds[0]  # 'order number' column
             order_numbers_elements.append(td.find_element(By.TAG_NAME, 'label'))
-        print("len(order_numbers_elements)", len(order_numbers_elements))
         orders_numbers = []
         for element in order_numbers_elements:
             orders_numbers.append(element.text)
-        print("len(orders_numbers)", len(orders_numbers))
-        print(orders_numbers[0])
         return orders_numbers
 
     # returns a list of all of the user's orders' total price, as a string.

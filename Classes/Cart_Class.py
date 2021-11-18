@@ -12,7 +12,7 @@ from selenium.webdriver.support.wait import WebDriverWait
     2. get_products_quantities- returns a list of all of the products' quantities in the cart, as a string.
     3. get_products_colors- returns a list of all of the products' colors in the cart.
     4. get_products_price- returns a list of all of the products' prices in the cart, as a string.
-    5. get_total !!!
+    5. get_total- return the 'Total' from the cart page, as a string.
     
 ## CLICK METHODS:
     1. click_checkout- clicks the 'Checkout' button.
@@ -113,8 +113,12 @@ class Cart:
         prices.reverse()
         return prices
 
+    # return the 'Total' from the cart page, as a string
     def get_total(self):
-        total_str = self.driver.find_element(By.XPATH,"//tfoot/tr[1]/td[2]/span[2]").text
+        """
+        :return: the 'Total' from the cart page, as a string
+        """
+        total_str = self.driver.find_element(By.XPATH, "//tfoot/tr[1]/td[2]/span[2]").text
         return total_str
 
     ## CLICK METHODS ##

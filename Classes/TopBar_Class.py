@@ -110,10 +110,18 @@ class Topbar:
         self.wait3.until(EC.invisibility_of_element((username_elem)))
         # sign_out.click()
 
+    def click_delete_user(self, btn): # ! in-class method
+        try:
+            self.wait3.until(EC.element_to_be_clickable((btn)))
+            btn.click()
+        except:
+            self.click_delete_user()
+
     def delete_logged_user(self):
         self.click_my_account()
-        delete_account_btn = self.driver.find_element(By.CSS_SELECTOR, "#myAccountContainer>div>button")
-        delete_account_btn.click()
+        # delete_account_btn = self.driver.find_element(By.CSS_SELECTOR, "#myAccountContainer>div>button")
+        delete_account_btn = self.driver.find_element(By.CSS_SELECTOR, "div.deleteBtnText")
+        self.click_delete_user(self.driver.find_element(By.CSS_SELECTOR, "div.deleteBtnText"))
         self.wait3.until(EC.visibility_of((self.driver.find_element(By.CSS_SELECTOR, "div[id='deleteAccountPopup']>div[class='deleteBtnContainer']>div[class='deletePopupBtn deleteRed']"))))
         self.driver.find_element(By.CSS_SELECTOR, "div[id='deleteAccountPopup']>div[class='deleteBtnContainer']>div[class='deletePopupBtn deleteRed']").click()
 
@@ -128,6 +136,7 @@ class Topbar:
         cart.click()
         ActionChains(self.driver).move_to_element(self.user_btn).perform()
         self.user_btn.send_keys(Keys.ESCAPE)
+        # waiting for cat popup to close
         self.wait10.until(EC.invisibility_of_element(((self.driver.find_element(By.CSS_SELECTOR, '#toolTipCart>div>table')))))
 
     def get_total_items(self):

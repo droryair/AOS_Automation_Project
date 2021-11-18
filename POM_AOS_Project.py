@@ -1,6 +1,8 @@
 """
 מה מבנה הטסטים? האם לכל סעיף צריך להיות טסט משלו?
 איך מונעים בעיית סנכון באופן גורף (למשל, אם בדיוק עברתי עמוד)? האם צריך להתחשב בבעיות סנכרון עבור כל פונקציה?
+
+פונקציה מחזירה את פרטי המוצר שנכנס לעגלה/ נמחק מהעגלה
 """
 from random import randint
 from time import sleep
@@ -18,7 +20,7 @@ from Classes.CreateAccount_Class import CreateAccount
 from Classes.MyOrders_Class import MyOrders
 
 
-class test_AOS_website(TestCase):
+class test_AOS_Website(TestCase):
 
     def setUp(self):
         self.service = Service(r'D:\QA_Course\webdrivers\chromedriver.exe')
@@ -38,18 +40,8 @@ class test_AOS_website(TestCase):
         if self.topbar.is_logged_in():
             self.topbar.click_sign_out()
 
-    ## IN-CLASS METHODS
 
-    # adds a random product to the cart
-    # def add_random_product(self, quant):
-    #     self.topbar.click_aos_logo()
-    #     self.homepage.click_random_category()
-    #     self.category.click_random_product()
-    #     if self.product.is_sold_out():  # recursive call if the product is out of stock
-    #         self.add_random_product(quant)
-    #     else:
-    #         self.product.change_quantity(quant)
-    #         self.product.add_to_cart()
+    ## IN-CLASS METHODS
 
     # goes to in-stock random product page
     def go_to_random_product(self):
@@ -59,6 +51,7 @@ class test_AOS_website(TestCase):
         if self.product.is_sold_out():  # recursive call if the product is out of stock
             self.go_to_random_product()
 
+    # receives amount and quantity of products to add to the cart. return a list of those products' details
     def add_random_products(self, amount, quantity):
         products_details = []
         for i in range(amount):
@@ -94,8 +87,6 @@ class test_AOS_website(TestCase):
 
     ##
 
-    # 1,2,5,8,9
-
     ## TESTS FUNCTIONS
     def test_1(self):
         self.topbar.click_aos_logo()
@@ -126,10 +117,10 @@ class test_AOS_website(TestCase):
         print("initial details: ", initial_details)
         print("cart_details: ", cart_details)
         # taking care of case where the same product was added more than once:
-        for i in range(len(initial_details)-1):
+        for i in range(len(initial_details) - 1):
             if initial_details[i]['name'] in initial_details[i:]:
                 name = initial_details[i]['name']
-                for j in range(i, len(initial_details)-1):
+                for j in range(i, len(initial_details) - 1):
                     if initial_details[j]['name'] == name:
                         new_quant = initial_details[i]['quantity'] + initial_details[j]['quantity']
                         initial_details[i]['quantity'] = new_quant
@@ -152,7 +143,7 @@ class test_AOS_website(TestCase):
         popup_cart_before = self.topbar.get_items_elems_from_popup_cart()
 
         # choosing random product to remove
-        random_index = randint(0, len(popup_cart_before)-1)
+        random_index = randint(0, len(popup_cart_before) - 1)
         print("random product to remove: ", random_index, "amount fo products: ", len(popup_cart_before))
 
         removed_item = self.topbar.remove_item_from_popup_cart(random_index)
@@ -161,8 +152,7 @@ class test_AOS_website(TestCase):
         if removed_item in popup_cart_after:
             self.fail("The removed item is still in the cart")
         # compare amount of cart items after removing
-        self.assertEqual(len(popup_cart_after), len(popup_cart_before)-1)
-
+        self.assertEqual(len(popup_cart_after), len(popup_cart_before) - 1)
 
     def test_4(self):
         self.topbar.click_aos_logo()
@@ -199,8 +189,6 @@ class test_AOS_website(TestCase):
         print("cart_total: ", cart_total)
         self.assertEqual(total_price, cart_total)
 
-
-
     def test_6(self):
         self.topbar.click_aos_logo()
         """
@@ -212,7 +200,7 @@ class test_AOS_website(TestCase):
         items_amount = len(self.topbar.get_items_elems_from_popup_cart())
         self.topbar.click_cart()
         new_quantities = []
-        for i in range(items_amount-1):
+        for i in range(items_amount - 1):
             self.cart.click_edit(i)
             current_quant = added_products[i]['quantity']
             new_quant = randint(1, current_quant) + randint(current_quant + 1, current_quant + 5)
@@ -227,7 +215,6 @@ class test_AOS_website(TestCase):
         for i in range(len(cart_new_quantities)):
             self.assertEqual(new_quantities[i], cart_new_quantities[i])
 
-
     def test_7(self):
         self.topbar.click_aos_logo()
         """
@@ -241,8 +228,6 @@ class test_AOS_website(TestCase):
         self.assertEqual(self.topbar.get_page(), "TABLETS")
         self.topbar.go_back()
         self.assertEqual(self.topbar.get_page(), 'Home')
-
-
 
     def test_8(self):
         self.topbar.click_aos_logo()
@@ -293,6 +278,8 @@ class test_AOS_website(TestCase):
         if order_number not in orders_numbers:
             self.fail(f"The order {order_number} is not in 'My Orders' page.")
 
+        # deleting the user -> not 100% working
+        print("@@@ DELETING THE ACCOUNT. THIS IS NOT PART OF THE TEST @@@")
         self.topbar.delete_logged_user()
 
     def test_9(self):
@@ -321,14 +308,14 @@ class test_AOS_website(TestCase):
         self.order_payment.select_mastercard()
 
         # generating random mastercard details and setting them
-            # card number:
+        # card number:
         card_number = ''
         for i in range(14):
             card_number += str(randint(0, 10))
 
             # CVV number
         cvv_number = randint(100, 1000)
-            # cardholser name = username
+        # cardholser name = username
         cardholder_name = self.topbar.get_username()
 
         # setting the details
