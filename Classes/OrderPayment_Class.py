@@ -6,7 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 ## IN-CLASS METHODS:
     1. wait_for_pay_now_btn- waiting for 'pay now' button to be clickable
     2. try_editing- waits to see if mastercard details are editable. if not- clicks the 'edit' button
-    3. click_edit_paymet_details- clicking on 'Edit' button for editing 'Mastercard' information
+    3. click_edit_payment_details- clicking on 'Edit' button for editing 'Mastercard' information
 ## SET METHODS -> LOGIN:
     1. set_username- receives a username string and enters it to the corresponding input field
     2. set_password- receives a password string and enters it to the corresponding input field
@@ -49,7 +49,7 @@ class OrderPayment:
         except:
             print("Can't click the 'pay now' button")
 
-    # in case the mastercard details are already registered and we want edit them
+    ## in case the mastercard details are already registered and we want edit them:
 
     # waits to see if mastercard details are editable. if not- clicks the 'edit' button
     def try_editing(self, element):
@@ -61,10 +61,10 @@ class OrderPayment:
         try:
             self.wait3.until(EC.visibility_of(element))
         except:
-            self.click_edit_paymet_details()
+            self.click_edit_payment_details()
 
     # clicking on 'Edit' button for editing 'Mastercard' information
-    def click_edit_paymet_details(self):
+    def click_edit_payment_details(self):
         """
         "functionality: clicking on 'Edit' button for editing 'Mastercard' information
         :return:
@@ -163,15 +163,15 @@ class OrderPayment:
         radio = self.driver.find_element(By.NAME, "masterCredit")
         radio.click()
 
-    # receives a 'mastercard' card number int and enters it to the corresponding input field
-    def set_mastercard_card_number(self, card_number: int):
+    # receives a 'mastercard' card number (str) and enters it to the corresponding input field
+    def set_mastercard_card_number(self, card_number: str):
         """
-        :param card_number: card number int
+        :param card_number: card number (str)
         :functionality: enters the card number to the corresponding input field
         :return: None
         """
         card_number_input = self.driver.find_element(By.NAME, "card_number")
-        self.try_editing(card_number)
+        self.try_editing(card_number_input)
         card_number_input.clear()
         card_number_input.send_keys(card_number)
         card_number_input.send_keys(card_number)

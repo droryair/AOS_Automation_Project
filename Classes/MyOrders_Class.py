@@ -40,6 +40,7 @@ class MyOrders:
         orders_numbers = []
         for element in order_numbers_elements:
             orders_numbers.append(element.text)
+        print("order numbers:", orders_numbers)
         return orders_numbers
 
     # returns a list of all of the user's orders' total price, as a string.

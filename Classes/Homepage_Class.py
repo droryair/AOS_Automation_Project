@@ -1,6 +1,5 @@
 from random import choice
 from selenium.webdriver.common.by import By
-
 """
 ## CLICK METHODS:
     1. click_random_category- clicks a random category.
@@ -45,3 +44,4 @@ class Homepage:
             print(f"Category name {category_name} not found in home page")
             return
         category.click()
+

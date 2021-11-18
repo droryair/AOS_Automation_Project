@@ -134,14 +134,14 @@ class Cart:
 
     # given an index clicks 'Edit' button of the product suiting that index
     def click_edit(self, index):
-        # ! add an 'how_many_products' to check if the given index is out of range? !
         """
         :param index: index of wanted product
         :functionality: clicks the 'Edit' button of the product suiting the given index
         :return: None
         """
         self.refresh_table()
-        if not self.is_cart_empty():
+        amount_of_products = len(self.table_rows)
+        if not self.is_cart_empty() and 0 < index < amount_of_products:
             tds = self.table_rows[index].find_elements(By.TAG_NAME, "td")
             span = tds[len(tds)-1].find_element(By.TAG_NAME, "span")
             edit_btn = span.find_element(By.LINK_TEXT, "EDIT")

@@ -1,11 +1,4 @@
-"""
-מה מבנה הטסטים? האם לכל סעיף צריך להיות טסט משלו?
-איך מונעים בעיית סנכון באופן גורף (למשל, אם בדיוק עברתי עמוד)? האם צריך להתחשב בבעיות סנכרון עבור כל פונקציה?
-
-פונקציה מחזירה את פרטי המוצר שנכנס לעגלה/ נמחק מהעגלה
-"""
 from random import randint
-from time import sleep
 from unittest import TestCase
 from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
@@ -40,7 +33,6 @@ class test_AOS_Website(TestCase):
         if self.topbar.is_logged_in():
             self.topbar.click_sign_out()
 
-
     ## IN-CLASS METHODS
 
     # goes to in-stock random product page
@@ -57,7 +49,7 @@ class test_AOS_Website(TestCase):
         for i in range(amount):
             self.topbar.click_aos_logo()
             self.go_to_random_product()
-            self.product.change_quantity(quantity)
+            self.product.set_quantity(quantity)
             products_details.append(
                 {
                     'name': self.product.get_name(),
@@ -205,7 +197,7 @@ class test_AOS_Website(TestCase):
             current_quant = added_products[i]['quantity']
             new_quant = randint(1, current_quant) + randint(current_quant + 1, current_quant + 5)
             new_quantities.append(new_quant)
-            self.product.change_quantity(new_quant)
+            self.product.set_quantity(new_quant)
             self.product.add_to_cart()
         # cart_new_quantities = self.str_to_num(self.cart.get_products_quantities())
         cart_new_quantities = []
@@ -315,13 +307,13 @@ class test_AOS_Website(TestCase):
 
             # CVV number
         cvv_number = randint(100, 1000)
-        # cardholser name = username
+        # cardholder name = username
         cardholder_name = self.topbar.get_username()
 
         # setting the details
-        self.order_payment.set_mastercard_card_number(card_number)
-        self.order_payment.set_mastercard_cvv_number(cvv_number)
         self.order_payment.set_mastercard_cardholder_name(cardholder_name)
+        self.order_payment.set_mastercard_cvv_number(cvv_number)
+        self.order_payment.set_mastercard_card_number(card_number)
 
         self.order_payment.click_pay_now_mastercard()
 
