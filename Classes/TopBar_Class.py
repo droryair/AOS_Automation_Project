@@ -21,7 +21,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 ## POP-UP CART METHODS:
     1. get_items_from_popup_cart- returns a list of items' details in the popup cart as a dictionary.
     2. get_items_elems_from_popup_cart- returns a list of the items' elements in the pop-up cart
-    3. remove_item_from_popup_cart- receives an item's index (int), removes it from the cart and returns the removed item.
+    3. get_items_names_from_popup_cart - return clean names (if partial- no dots) of products in the popup cart
+    4. remove_item_from_popup_cart- receives an item's index (int) and removes it from the cart.
 ## LOCATION IN THE SITE METHODS:
     1. get_page- returns the name of the current page (str)
     2. go_back- goes back to the previous page
@@ -36,6 +37,7 @@ class Topbar:
         self.user_btn = self.driver.find_element(By.ID, "menuUserLink")
         self.wait10 = WebDriverWait(self.driver, 10)
         self.wait3 = WebDriverWait(self.driver, 3)
+        self.wait1 = WebDriverWait(self.driver, 1)
         self.menu_options = self.driver.find_elements(By.CSS_SELECTOR, "#loginMiniTitle>label")
 
     ## IN-CLASS METHODS
@@ -121,9 +123,16 @@ class Topbar:
         """
         cart = self.driver.find_element(By.ID, "menuCart")
         cart.click()
+
+        # waiting for the topbar path to update
+        try:
+            self.wait3.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, '#toolTipCart>div>table'),'SHOPPING CART'))
+        except:
+            pass
+
+        # waiting for cart popup to close
         ActionChains(self.driver).move_to_element(self.user_btn).perform()
         self.user_btn.send_keys(Keys.ESCAPE)
-        # waiting for cat popup to close
         self.wait10.until(EC.invisibility_of_element(((self.driver.find_element(By.CSS_SELECTOR, '#toolTipCart>div>table')))))
 
     ## USER ICON MENU METHODS
@@ -199,11 +208,11 @@ class Topbar:
                     name = cart_item.find_element(By.TAG_NAME, 'h3').text
                     quant = cart_item.find_element(By.XPATH, './/label[1]').text
                     color = cart_item.find_element(By.XPATH, './/label[2]/span').text
-                    items.append({'name': name, 'quantity': quant, 'color': color})
+                    price = row.find_element(By.XPATH, ".//td[3]/p").text
+                    items.append({'name': name, 'quantity': quant, 'color': color, 'price': price})
             items.reverse()
             return items
         else:
-            print("The cart is empty")
             return []
 
     # returns a list of the items' elements in the pop-up cart
@@ -214,20 +223,46 @@ class Topbar:
         if self.get_total_items() > 0:
             self.show_cart_popup()
             items_elems = self.driver.find_elements(By.CSS_SELECTOR, "#toolTipCart>div>table>tbody>tr")
-            items_elems.reverse()
             return items_elems
         else:
             print("The cart is empty")
             return []
 
-    # receives an item's index (int), removes it from the cart and returns the removed item.
+    # return clean names (if partial- no dots) of products in the popup cart
+    def get_items_names_from_popup_cart(self):
+        """
+        :return: a list of the items' names in the pop-up cart ( top item = index 0 )
+        """
+        if self.get_total_items() > 0:
+            self.show_cart_popup()
+            items_names = []
+            items_elems = self.driver.find_elements(By.CSS_SELECTOR, "#toolTipCart>div>table>tbody>tr")
+            for item_elem in items_elems:
+                name = item_elem.find_element(By.CSS_SELECTOR, "td>a>h3").text
+                if name[len(name)-1] == '.':
+                    name.rsplit('.')
+                items_names.append(name)
+            return items_names
+        else:
+            print("The cart is empty")
+            return []
+
+    # receives an item's index (int) and removes it from the cart.
     def remove_item_from_popup_cart(self, item_index: int):
+        """
+        :param item_index: index of item wished to be removed
+        :return: None
+        """
         self.show_cart_popup()
         items = self.get_items_elems_from_popup_cart()
-        removed_item = items[item_index]
+
         remove_btn = items[item_index].find_element(By.CSS_SELECTOR, ".closeDiv>div")
         remove_btn.click()
-        return removed_item
+        # waiting for the product to disappear
+        try:
+            self.wait1.until(EC.invisibility_of_element((items[item_index].find_element(By.CSS_SELECTOR, ".closeDiv>div"))))
+        except:
+            pass
 
     ## LOCATION IN THE SITE METHODS
 

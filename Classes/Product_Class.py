@@ -1,4 +1,7 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
 """
 ## IN-CLASS METHODS:
     1. is_sold_out- returns boolean value for weather an item is sold out.
@@ -17,7 +20,7 @@ from selenium.webdriver.common.by import By
 class Product:
     def __init__(self, driver):
         self.driver = driver
-        # self.wait3 = WebDriverWait(self.driver, 3)
+        self.wait1 = WebDriverWait(self.driver, 0.3)
 
     ## IN-CLASS METHODS
 
@@ -26,12 +29,11 @@ class Product:
         """
         :return: boolean value for weather an item is sold out.
         """
-        sold_out_span = self.driver.find_element(By.CSS_SELECTOR, "#Description>h2>span")
-        if sold_out_span.is_displayed():
-            print("Product -> 23-> sold out")
+        try:
+            self.wait1.until(EC.visibility_of((self.driver.find_element(By.CSS_SELECTOR, "#Description>h2>span"))))
             return True
-        print("Product -> 25 -> not sold out")
-        return False
+        except:
+            return False
 
     ##
 

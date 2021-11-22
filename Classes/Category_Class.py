@@ -4,7 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 """
-1. click_random_product - clicks a random product in the page.
+2. click_specific_product- receives an id number and clicks the product matching that id.
 """
 
 class Category:
@@ -12,13 +12,15 @@ class Category:
         self.driver = driver
         self.wait10 = WebDriverWait(self.driver, 10)
 
-    #clicks a random product in the page
-    def click_random_product(self):
+    # receives an id number and clicks the product matching that id
+    def click_specific_product(self, id):
         """
-        :functionality: clicks a random product in the page
+        :param id: product's id number
+        :functionality: clicks the  product matching the given id
         :return: None
         """
+        # waiting for the page to load:
         self.wait10.until(EC.visibility_of((self.driver.find_element(By.CLASS_NAME, "categoryRight"))))
-        products = self.driver.find_elements(By.CSS_SELECTOR, "div.categoryRight>ul>li")
-        choice(products).click()
+        product_elem = self.driver.find_element(By.CSS_SELECTOR, f"img[id='{id}']")
+        product_elem.click()
 

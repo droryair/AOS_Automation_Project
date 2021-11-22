@@ -26,7 +26,7 @@ from selenium.webdriver.support.wait import WebDriverWait
     6. click_pay_now_safepay- clicks the 'pay now' button for 'safepay' payment method
 ## SUCCESSFUL ORDERING:
     1. get_order_number- returns the order's number as string after committing it successfully.
-    
+
 """
 
 
