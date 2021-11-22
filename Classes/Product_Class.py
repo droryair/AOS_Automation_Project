@@ -1,69 +1,89 @@
-"""
-product (choose quantity, add to cart)
-"""
-from random import choice
-from time import sleep
-
-from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+
+"""
+## IN-CLASS METHODS:
+    1. is_sold_out- returns boolean value for weather an item is sold out.
+## SET METHODS:
+    1. set_quantity- receives a quantity int and sets the new quantity to the product
+## GET METHODS:
+    1. get_quantity- returns the current quantity of the product, as a string
+    2. get_name- returns the product's name
+    3. get_color- returns the product's color
+    4. get_price- returns the product's price, as a string
+## CLICK METHODS:
+    1. add_to_cart- clicks 'add to cart' button
+"""
 
 
 class Product:
     def __init__(self, driver):
         self.driver = driver
-        # self.wait3 = WebDriverWait(self.driver, 3)
+        self.wait1 = WebDriverWait(self.driver, 0.3)
 
-    ## in-class methods:
+    ## IN-CLASS METHODS
 
+    # returns boolean value for weather an item is sold out.
     def is_sold_out(self):
-        sold_out_span = self.driver.find_element(By.CSS_SELECTOR, "#Description>h2>span")
-        if sold_out_span.is_displayed():
-            print("Product -> 23-> sold out")
+        """
+        :return: boolean value for weather an item is sold out.
+        """
+        try:
+            self.wait1.until(EC.visibility_of((self.driver.find_element(By.CSS_SELECTOR, "#Description>h2>span"))))
             return True
-        print("Product -> 25 -> not sold out")
-        return False
+        except:
+            return False
 
     ##
 
-    def change_quantity(self, quantity):
+    ## SET METHODS
+
+    # recieves a quantity int and sets the new quantity to the product
+    def set_quantity(self, quantity: int):
+        """
+        :param quantity: quantity int
+        :functionality: sets the new quantity to the product.
+        :return: None
+        """
         if not self.is_sold_out():
-            # clear() and send_keys() didn't work. using buttons:
-            existing_quant = int(self.driver.find_element(By.CSS_SELECTOR, "input[name=quantity]").get_attribute("value"))
+            existing_quant = int(self.get_quantity())
             plus_btn = self.driver.find_element(By.CSS_SELECTOR, "div.plus")
             minus_btn = self.driver.find_element(By.CSS_SELECTOR, "div.minus")
-            # existing_quant.send_keys(quantity)
             if existing_quant < quantity:
                 while existing_quant < quantity:
                     plus_btn.click()
-                    existing_quant = int(self.driver.find_element(By.CSS_SELECTOR, "input[name=quantity]").get_attribute("value"))
+                    existing_quant = int(
+                        self.driver.find_element(By.CSS_SELECTOR, "input[name=quantity]").get_attribute("value"))
             elif existing_quant > quantity:
                 while existing_quant > quantity:
                     minus_btn.click()
-                    existing_quant = int(self.driver.find_element(By.CSS_SELECTOR, "input[name=quantity]").get_attribute("value"))
+                    existing_quant = int(
+                        self.driver.find_element(By.CSS_SELECTOR, "input[name=quantity]").get_attribute("value"))
 
+    ## GET METHODS
+
+    # returns the current quantity of the product, as a string
     def get_quantity(self):
+        """
+        :return: the current quantity of the product, as a string
+        """
         if not self.is_sold_out():
             existing_quant = self.driver.find_element(By.CSS_SELECTOR, "input[name=quantity]").get_attribute("value")
             return existing_quant
-    '''    
-    def choose_random_color(self):
-        ##   #productProperties>div[class='colors ng-scope']>div:nth-child(3)>span
-        ## //div[@id='productProperties']/div[@class='colors ng-scope']/div[2]/span
-        colors = self.driver.find_elements(By.XPATH, "//div[@id='productProperties']/div[@class='colors ng-scope']/div[@ng-show='!firstImageToShow']/span")
-                                                     #//div[@id='productProperties']/div[@class='colors ng-scope']/div[2]/span")
-        print("choose_random_color-> type colors", type(colors))
-        one_color = choice(colors)
-        one_color.click()
-        # print("one_color", one_color)
-    '''
 
+    # returns the product's name
     def get_name(self):
+        """
+        :return: the product's name
+        """
         return self.driver.find_element(By.CSS_SELECTOR, "#Description>h1").text
 
+    # returns the product's color
     def get_color(self):
-        # class include('colorSelected')
+        """
+        :return: the product's color
+        """
         colors_elems = self.driver.find_elements(By.CSS_SELECTOR, "#productProperties>div>div>span")
         for color_elem in colors_elems:
             class_name = color_elem.get_attribute('class')
@@ -71,15 +91,22 @@ class Product:
                 return color_elem.get_attribute("title")
         print('Product -> 71 -> Error: no color selected???')
 
+    # returns the product's price, as a string
     def get_price(self):
-        ## Descritopn>h2.text
+        """
+        :return: the product's price, as a string
+        """
         price_str = self.driver.find_element(By.CSS_SELECTOR, "#Description>h2").text
         return price_str
 
+    ## CLICK METHODS
+
+    # clicks 'add to cart' button
     def add_to_cart(self):
+        """
+        :functionality: clicks the 'add to cart' button
+        :return: None
+        """
         if not self.is_sold_out():
             btn = self.driver.find_element(By.CSS_SELECTOR, "button[name=save_to_cart]")
             btn.click()
-
-
-

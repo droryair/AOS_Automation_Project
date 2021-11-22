@@ -6,21 +6,18 @@ from selenium.webdriver.support.wait import WebDriverWait
 ## IN-CLASS METHODS:
     1. get_list_cells_elems- receives an index, and returns a list including the column matching to the index.
     2. refresh_table- refresh self.table_rows in case something changed.
-    
 ## GET METHODS:
     1. get_products_names- returns a list of all of the products' names in the cart.
     2. get_products_quantities- returns a list of all of the products' quantities in the cart, as a string.
     3. get_products_colors- returns a list of all of the products' colors in the cart.
     4. get_products_price- returns a list of all of the products' prices in the cart, as a string.
-    5. get_total !!!
-    
+    5. get_total- return the 'Total' from the cart page, as a string.
 ## CLICK METHODS:
     1. click_checkout- clicks the 'Checkout' button.
     2. click_edit- given an index clicks 'Edit' button of the product suiting that index.
-    
 ## BOOLEAN METHODS:
     1. is_cart_empty- returns boolean value for the emptiness of the cart.
-    
+
 """
 
 
@@ -113,8 +110,12 @@ class Cart:
         prices.reverse()
         return prices
 
+    # return the 'Total' from the cart page, as a string
     def get_total(self):
-        total_str = self.driver.find_element(By.XPATH,"//tfoot/tr[1]/td[2]/span[2]").text
+        """
+        :return: the 'Total' from the cart page, as a string
+        """
+        total_str = self.driver.find_element(By.XPATH, "//tfoot/tr[1]/td[2]/span[2]").text
         return total_str
 
     ## CLICK METHODS ##
@@ -130,19 +131,22 @@ class Cart:
 
     # given an index clicks 'Edit' button of the product suiting that index
     def click_edit(self, index):
-        # ! add an 'how_many_products' to check if the given index is out of range? !
         """
         :param index: index of wanted product
         :functionality: clicks the 'Edit' button of the product suiting the given index
         :return: None
         """
         self.refresh_table()
-        if not self.is_cart_empty():
+        amount_of_products = len(self.table_rows)
+        if not self.is_cart_empty() and 0 <= index < amount_of_products - 1:
             tds = self.table_rows[index].find_elements(By.TAG_NAME, "td")
-            span = tds[len(tds)-1].find_element(By.TAG_NAME, "span")
+            span = tds[len(tds) - 1].find_element(By.TAG_NAME, "span")
             edit_btn = span.find_element(By.LINK_TEXT, "EDIT")
             self.wait10.until(EC.element_to_be_clickable((edit_btn)))
             edit_btn.click()
+        else:
+            print(
+                f"Cart -> 148 -> condition didn't stand: \n if not self.is_cart_empty() and 0 < index < amount_of_products:\n is emty{self.is_cart_empty()} index: {index}")
 
     ## BOOLEAN METHODS ##
 
@@ -153,7 +157,5 @@ class Cart:
         :return: True if empty, False if not empty.
         """
         self.refresh_table()
-        return self.driver.find_element(By.CSS_SELECTOR, "#shoppingCart>div>label[translate='Your_shopping_cart_is_empty']").is_displayed()
-
-
-# tr one before last > td last >span[2]
+        return self.driver.find_element(By.CSS_SELECTOR,
+                                        "#shoppingCart>div>label[translate='Your_shopping_cart_is_empty']").is_displayed()
