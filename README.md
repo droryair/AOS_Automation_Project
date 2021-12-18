@@ -2,7 +2,22 @@
 
 An automation project on the demo website: https://www.advantageonlineshopping.com/
 
-• All of the tests are pulling data from an ["Excel" file](https://github.com/droryair/AOS_Automation_Project/blob/main/data.xlsx), and inserting the test results to a designated cell in the same file.
+- :computer:The Technologies I used for this project:
+<kbd>
+<img alt="Python Logo" src="https://res.cloudinary.com/practicaldev/image/fetch/s--uSnYxWbN--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://external-content.duckduckgo.com/iu/%3Fu%3Dhttps%253A%252F%252Fyourdevops.org%252Fwp-content%252Fuploads%252F2019%252F03%252Fpython3.jpg%26f%3D1%26nofb%3D1"  height="50">
+</kbd>
+<kbd>
+  <img alt="Unittest Logo" src="https://blog.testproject.io/wp-content/uploads/2020/06/Pyunit.png" height="50">
+</kbd>
+<kbd>
+  <img alt="Selenium Logo" src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.xmxblog.com%2Fwp-content%2Fuploads%2F2020%2F12%2Fselenium.jpg&f=1&nofb=1"  height="50">
+  </kbd>
+<kbd>
+  <img alt="Openpyxl Logo" src="https://openpyxl.readthedocs.io/en/stable/_static/logo.png" height="40">
+  </kbd>
+<br>
+
+- All of the tests are pulling data from an ["Excel" file](https://github.com/droryair/AOS_Automation_Project/blob/main/data.xlsx), and inserting the test results to a designated cell in the same file.
 
 <h3>
   The Test Cases:
